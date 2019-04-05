@@ -42,7 +42,7 @@ class BertMaskedLM:
         Return prediction for an input with masked input word(s).
         Recursive and assumes properly tokenized input.
         """
-          tokenized_text = self.tokenizer.tokenize(masked_input)
+        tokenized_text = self.tokenizer.tokenize(masked_input)
 
         # Convert token to vocabulary indices
         indexed_tokens = self.tokenizer.convert_tokens_to_ids(tokenized_text)
@@ -76,7 +76,7 @@ class BertMaskedLM:
         with torch.no_grad():
             self.counter += 1
             if (self.counter % 10) == 0:
-                logging.info(self.counter)
+                logging.debug(self.counter)
             predictions = functional.normalize(self.model(tokens_tensor, segments_tensor),
                                                dim = 2, p = 1)
             cur_row = predictions[0, masked_index]
@@ -124,10 +124,9 @@ if __name__ == "__main__":
     assert len(nc) == 2
     n1, n2 = nc
     mask = " ".join([MASK_TOKEN] * num_of_slots)
-w
+
     # Tokenized input
     text = f"[CLS] {n1} {n2} is a {n2} that {mask} {n1} . [SEP]"
-
     bert = BertMaskedLM(beam_width = beam_width)
     ls = bert.predict(text)
     with open(out_fn, "w", encoding = "utf8") as fout:
